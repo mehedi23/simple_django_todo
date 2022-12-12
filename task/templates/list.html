@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+ 
+
+{% block content %}
+
+
+
+<div class="container pt-5">
+  <form action="/" method="post">
+    {% csrf_token %}
+    
+    <div class="mb-3">
+      <label class="form-label">Task name</label>
+      {{form.tittle}}
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+
+<div class="container mt-5">
+    <ul class="list-group">
+        {% for task_obj in tasks %}
+        <li class="list-group-item">
+          {{task_obj.tittle}}
+
+          <a href="{% url 'update_task' task_obj.id %}">link</a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock content %}
