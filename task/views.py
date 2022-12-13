@@ -7,8 +7,9 @@ from .models import *
 from .forms import *
 
 def index(request):
-    tasks = Task.objects.all()
     form = TaskForm()
+    completed_task = Task.objects.filter(complete=True)
+    uncompleted_task = Task.objects.filter(complete=False)
 
     if request.method == 'POST':
         form = TaskForm(request.POST)
@@ -19,7 +20,8 @@ def index(request):
         return redirect('/')
 
     context = {
-        'tasks' : tasks,
+        'completed_task' : completed_task,
+        'uncompleted_task' : uncompleted_task,
         'form' : form
     }
 

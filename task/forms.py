@@ -5,8 +5,8 @@ from .models import *
 
 class TaskForm(forms.ModelForm):
     
-    tittle = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control'}))
+    tittle = forms.CharField()
 
     class Meta:
         model = Task
-        fields = '__all__'
+        fields = ['tittle', 'complete']
