@@ -1,23 +1,23 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from .models import Task
+from .forms import TaskForm
 
-# Create your views here.
 
-from .models import *
-from .forms import *
-
+@login_required
 def index(request):
-    print(request.user.is_authenticated )
     
     form = TaskForm()
-    completed_task = Task.objects.filter(complete=True)
-    uncompleted_task = Task.objects.filter(complete=False)
+    completed_task = Task.objects.filter(complete=True, user=request.user)
+    uncompleted_task = Task.objects.filter(complete=False, user=request.user)
 
     if request.method == 'POST':
         form = TaskForm(request.POST)
 
         if form.is_valid():
-            form.save()
+            obj = form.save(commit = False)
+            obj.user = request.user;
+            obj.save()
 
         return redirect('/todo')
 
@@ -31,10 +31,10 @@ def index(request):
 
 
 
-
+@login_required
 def update_task(request, pk):
 
-    task = Task.objects.get(id=pk)
+    task = Task.objects.get(id=pk, user=request.user)
     form = TaskForm(instance=task)
 
     if request.method == 'POST':
@@ -54,8 +54,8 @@ def update_task(request, pk):
     return render(request, 'update.html', context)
 
 
-
+@login_required
 def delete (request, pk):
-    task = Task.objects.get(id=pk)
+    task = Task.objects.get(id=pk, user=request.user)
     task.delete()
     return redirect('/')
