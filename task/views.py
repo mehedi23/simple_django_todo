@@ -7,6 +7,8 @@ from .models import *
 from .forms import *
 
 def index(request):
+    print(request.user.is_authenticated )
+    
     form = TaskForm()
     completed_task = Task.objects.filter(complete=True)
     uncompleted_task = Task.objects.filter(complete=False)
@@ -17,7 +19,7 @@ def index(request):
         if form.is_valid():
             form.save()
 
-        return redirect('/')
+        return redirect('/todo')
 
     context = {
         'completed_task' : completed_task,
@@ -41,7 +43,7 @@ def update_task(request, pk):
 
         if form.is_valid():
             form.save()
-            return redirect('/')
+            return redirect('/todo')
 
 
     context = {
